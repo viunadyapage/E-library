@@ -4,5 +4,6 @@ com\tubespbo\tbperpustakaan\controller\TestDbServlet.class
 com\tubespbo\tbperpustakaan\model\Account.class
 com\tubespbo\tbperpustakaan\utils\DBConnection.class
 com\tubespbo\tbperpustakaan\model\User.class
+com\tubespbo\tbperpustakaan\controller\RegisterUserServlet.class
 com\tubespbo\tbperpustakaan\controller\LogoutUserServlet.class
 com\tubespbo\tbperpustakaan\dao\AuthDAO.class

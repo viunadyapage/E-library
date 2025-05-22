@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class AuthDAO {
 
@@ -91,4 +92,91 @@ public class AuthDAO {
         }
         return user;
     }
+    
+    private String generateNextAccountID(Connection conn, String prefix) throws SQLException {
+        // Query untuk mendapatkan angka maksimum dari ID dengan prefix tertentu
+        String query = "SELECT MAX(CAST(SUBSTRING_INDEX(accountID, '_', -1) AS UNSIGNED)) AS max_id FROM accounts WHERE accountID LIKE ?";
+        long nextIdNum = 1; // Default jika tidak ada ID sebelumnya
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, prefix + "_%");
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                long maxNumFromDb = rs.getLong("max_id");
+                if (!rs.wasNull()) { 
+                    nextIdNum = maxNumFromDb + 1;
+                }
+            }
+        }
+        return prefix + "_" + nextIdNum;
+    }
+    public boolean registerUser(User user) {
+        String insertAccountSQL = "INSERT INTO accounts (accountID, email, password, isActive, registDate, accountType) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertUserSQL = "INSERT INTO users (accountID, username, name, phoneNumber, address) VALUES (?, ?, ?, ?, ?)";
+        
+        Connection conn = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            String newAccountID = generateNextAccountID(conn, "user");
+            Date registrationTime = new Date();
+
+            user.setAccountID(newAccountID);
+            user.setRegistDate(registrationTime);
+            
+            try (PreparedStatement psAccount = conn.prepareStatement(insertAccountSQL)) {
+                psAccount.setString(1, user.getAccountID());
+                psAccount.setString(2, user.getEmail());
+                
+                String hashedPassword = hashPassword(user.getPassword());
+                psAccount.setString(3, hashedPassword);
+                
+                psAccount.setBoolean(4, user.isActive());
+                psAccount.setTimestamp(5, new java.sql.Timestamp(user.getRegistDate().getTime()));
+                psAccount.setString(6, user.getAccountType());
+                
+                psAccount.executeUpdate();
+            }
+
+            try (PreparedStatement psUser = conn.prepareStatement(insertUserSQL)) {
+                psUser.setString(1, user.getAccountID());
+                psUser.setString(2, user.getUsername());
+                psUser.setString(3, user.getName());
+                psUser.setString(4, user.getPhoneNumber());
+                psUser.setString(5, user.getAddress());
+                
+                psUser.executeUpdate();
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("SQL Exception saat registrasi user: " + e.getMessage());
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    System.err.println("Transaksi di-rollback.");
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    
 }

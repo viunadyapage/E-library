@@ -37,6 +37,10 @@ public abstract class Account {
         return accountID;
     }
     
+    public void setAccountID(String accountID) {
+        this.accountID = accountID; 
+    }
+    
     public String getEmail() {
         return email;
     }
