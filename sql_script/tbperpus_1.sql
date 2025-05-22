@@ -34,3 +34,40 @@ CREATE TABLE admins (
     FOREIGN KEY (accountID) REFERENCES accounts(accountID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+INSERT INTO accounts (accountID, email, password, isActive, registDate, accountType)
+VALUES (
+    'user_1',
+    'testuser@example.com',
+    '1234',
+    TRUE,
+    CURDATE(),
+    'USER'
+);
+
+INSERT INTO users (accountID, username, name, phoneNumber, address)
+VALUES (
+    'user_1',
+    'testuser01',
+    'User Adit',
+    '081223323232',
+    'Jl. User'
+);
+
+INSERT INTO accounts (accountID, email, password, isActive, registDate, accountType)
+VALUES (
+    'admin_1',
+    'admin@example.com',
+    'passowrd',
+    TRUE,
+    CURDATE(),
+    'ADMIN'
+);
+
+-- 2. Data untuk tabel 'admins' untuk admin_1
+INSERT INTO admins (accountID, username, perpusID, roleID)
+VALUES (
+    'admin_1',
+    'testadmin01',
+    'PERPUS',
+    'SUPER_ADMIN'
+);
