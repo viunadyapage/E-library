@@ -23,7 +23,7 @@ public class LogoutUserServlet extends HttpServlet {
         if (session != null) {
             session.invalidate(); // Hapus semua atribut sesi dan batalkan sesi
         }
-        response.sendRedirect("login.jsp"); // Redirect ke halaman login
+        response.sendRedirect("login_user.jsp"); // Redirect ke halaman login
     }
 
     @Override

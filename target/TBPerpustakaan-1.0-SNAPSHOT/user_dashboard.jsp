@@ -6,7 +6,7 @@
 
     // Cek apakah pengguna sudah login, jika tidak, redirect ke halaman login
     if (loggedInUser == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("login_user.jsp");
         return; // Hentikan eksekusi sisa halaman JSP
     }
 %>
