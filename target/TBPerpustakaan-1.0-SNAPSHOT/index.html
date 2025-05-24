@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>Ini tugas besar PBO</h1>
-    </body>
+<head>
+    <title>Input Berita</title>
+</head>
+<body>
+    <h2>Form Berita</h2>
+    <form action="BeritaServlet" method="post">
+        <label for="judul">Judul:</label><br>
+        <input type="text" id="judul" name="judul"><br><br>
+        
+        <label for="isi">Isi Berita:</label><br>
+        <textarea id="isi" name="isi"></textarea><br><br>
+        
+        <input type="submit" value="Kirim">
+    </form>
+</body>
 </html>
