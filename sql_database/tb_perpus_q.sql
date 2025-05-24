@@ -1,0 +1,32 @@
+CREATE TABLE Pengguna (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Nama VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE Berita (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Judul VARCHAR(255) NOT NULL,
+    Tanggal DATE NOT NULL,
+    Penulis VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Komentar (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Isi TEXT NOT NULL,
+    Tanggal DATETIME NOT NULL,
+    idPengguna INT NOT NULL,
+    idBerita INT NOT NULL,
+    FOREIGN KEY (idPengguna) REFERENCES Pengguna(Id) ON DELETE CASCADE,
+    FOREIGN KEY (idBerita) REFERENCES Berita(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Notifikasi (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Isi TEXT NOT NULL,
+    Tanggal DATETIME NOT NULL,
+    Tipe ENUM('otomatis', 'manual') NOT NULL,
+    Status ENUM('terkirim', 'dibaca') NOT NULL,
+    idPengguna INT NOT NULL,
+    FOREIGN KEY (idPengguna) REFERENCES Pengguna(Id) ON DELETE CASCADE
+);
