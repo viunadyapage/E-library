@@ -4,179 +4,124 @@
  */
 package com.tubespbo.tbperpustakaan.dao;
 
-import com.tubespbo.tbperpustakaan.model.Account;
-import com.tubespbo.tbperpustakaan.model.User;
-import com.tubespbo.tbperpustakaan.utils.DBConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
+import dao.PenggunaDAO;
+import dao.AdminDAO;
+import model.Pengguna;
+import model.Admin;
 
-public class AuthDAO {
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
-    private String hashPassword(String plainPassword) {
-        return plainPassword;
-    }
-
-    public Account validateLogin(String email, String plainPassword) {
-        Account account = null;
-        String sql = "SELECT accountID, email, password, isActive, accountType FROM accounts WHERE email = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, email);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String storedHashedPassword = rs.getString("password");
-                    boolean isActive = rs.getBoolean("isActive");
-                    String accountType = rs.getString("accountType");
-                    if (isActive && hashPassword(plainPassword).equals(storedHashedPassword)) {                     
-                        account = new Account(rs.getString("accountID"), rs.getString("email"), rs.getString("accountType")) {
-                            
-                        };
-                    } else if (!isActive) {
-                        System.out.println("Login gagal: Akun " + email + " tidak aktif.");
-                    } else {
-                        System.out.println("Login gagal: Password salah untuk " + email);
-                    }
-                } else {
-                    System.out.println("Login gagal: Email " + email + " tidak ditemukan.");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle error, mungkin log atau throw custom exception
-        }
-        return account; // Mengembalikan objek Account jika berhasil, null jika gagal
-    }
-
-    public User validateUserLogin(String email, String plainPassword) {
-        User user = null;   
-        String sql = "SELECT acc.accountID, acc.email, acc.password, acc.isActive, acc.accountType,acc.registDate, " +
-                     "usr.username, usr.name, usr.phoneNumber, usr.address " +
-                     "FROM accounts acc LEFT JOIN users usr ON acc.accountID = usr.accountID " +
-                     "WHERE acc.email = ? AND acc.accountType = 'USER'";
-        
-        System.out.println("---------------------------------------------------------");
-        System.out.println("Attempting login for email: " + email);
-        System.out.println("Plain password received by DAO: " + plainPassword); // Hati-hati menampilkan plain password di log produksi
-
-        try (Connection conn = DBConnection.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                System.out.println(rs);
-                if (rs.next()) {
-                    String storedHashedPassword = rs.getString("password");
-                    boolean isActive = rs.getBoolean("isActive");
-
-                    if (isActive && hashPassword(plainPassword).equals(storedHashedPassword)) {
-                        user = new User(
-                            rs.getString("accountID"),
-                            rs.getString("email"),
-                            rs.getString("password"), 
-                            rs.getBoolean("isActive"),
-                            rs.getDate("registDate"),
-                            rs.getString("username"),
-                            rs.getString("name"),
-                            rs.getString("phoneNumber"),
-                            rs.getString("address")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return user;
+@WebServlet("/auth")
+public class AuthDao extends HttpServlet {
+    private PenggunaDAO penggunaDAO;
+    private AdminDAO adminDAO;
+    
+    @Override
+    public void init() throws ServletException {
+        penggunaDAO = new PenggunaDAO();
+        adminDAO = new AdminDAO();
     }
     
-    private String generateNextAccountID(Connection conn, String prefix) throws SQLException {
-        // Query untuk mendapatkan angka maksimum dari ID dengan prefix tertentu
-        String query = "SELECT MAX(CAST(SUBSTRING_INDEX(accountID, '_', -1) AS UNSIGNED)) AS max_id FROM accounts WHERE accountID LIKE ?";
-        long nextIdNum = 1; // Default jika tidak ada ID sebelumnya
-
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, prefix + "_%");
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                long maxNumFromDb = rs.getLong("max_id");
-                if (!rs.wasNull()) { 
-                    nextIdNum = maxNumFromDb + 1;
-                }
-            }
-        }
-        return prefix + "_" + nextIdNum;
-    }
-    public boolean registerUser(User user) {
-        String insertAccountSQL = "INSERT INTO accounts (accountID, email, password, isActive, registDate, accountType) VALUES (?, ?, ?, ?, ?, ?)";
-        String insertUserSQL = "INSERT INTO users (accountID, username, name, phoneNumber, address) VALUES (?, ?, ?, ?, ?)";
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
         
-        Connection conn = null;
-
-        try {
-            conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
-
-            String newAccountID = generateNextAccountID(conn, "user");
-            Date registrationTime = new Date();
-
-            user.setAccountID(newAccountID);
-            user.setRegistDate(registrationTime);
+        if (action == null || action.equals("login")) {
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        } else if (action.equals("register")) {
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+        } else if (action.equals("logout")) {
+            logout(request, response);
+        } else if (action.equals("admin-login")) {
+            request.getRequestDispatcher("/WEB-INF/views/admin-login.jsp").forward(request, response);
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        
+        switch (action) {
+            case "login":
+                loginUser(request, response);
+                break;
+            case "register":
+                registerUser(request, response);
+                break;
+            case "admin-login":
+                loginAdmin(request, response);
+                break;
+            default:
+                response.sendRedirect("auth");
+        }
+    }
+    
+    private void loginUser(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        
+        if (penggunaDAO.login(email, password)) {
+            Pengguna pengguna = penggunaDAO.getPenggunaByEmail(email);
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", pengguna.getId());
+            session.setAttribute("userName", pengguna.getNama());
+            session.setAttribute("userType", "user");
             
-            try (PreparedStatement psAccount = conn.prepareStatement(insertAccountSQL)) {
-                psAccount.setString(1, user.getAccountID());
-                psAccount.setString(2, user.getEmail());
-                
-                String hashedPassword = hashPassword(user.getPassword());
-                psAccount.setString(3, hashedPassword);
-                
-                psAccount.setBoolean(4, user.isActive());
-                psAccount.setTimestamp(5, new java.sql.Timestamp(user.getRegistDate().getTime()));
-                psAccount.setString(6, user.getAccountType());
-                
-                psAccount.executeUpdate();
-            }
-
-            try (PreparedStatement psUser = conn.prepareStatement(insertUserSQL)) {
-                psUser.setString(1, user.getAccountID());
-                psUser.setString(2, user.getUsername());
-                psUser.setString(3, user.getName());
-                psUser.setString(4, user.getPhoneNumber());
-                psUser.setString(5, user.getAddress());
-                
-                psUser.executeUpdate();
-            }
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException e) {
-            System.err.println("SQL Exception saat registrasi user: " + e.getMessage());
-            e.printStackTrace();
-            if (conn != null) {
-                try {
-                    System.err.println("Transaksi di-rollback.");
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return false;
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            response.sendRedirect("berita");
+        } else {
+            response.sendRedirect("auth?action=login&error=invalid");
         }
     }
     
+    private void registerUser(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        String nama = request.getParameter("nama");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        
+        Pengguna pengguna = new Pengguna();
+        pengguna.setNama(nama);
+        pengguna.setEmail(email);
+        pengguna.setPassword(password);
+        
+        if (penggunaDAO.registerPengguna(pengguna)) {
+            response.sendRedirect("auth?action=login&message=registered");
+        } else {
+            response.sendRedirect("auth?action=register&error=failed");
+        }
+    }
     
+    private void loginAdmin(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        Admin admin = adminDAO.authenticateAdmin(username, password);
+        if (admin != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("adminId", admin.getId());
+            session.setAttribute("adminName", admin.getUsername());
+            session.setAttribute("userType", "admin");
+            
+            response.sendRedirect("admin/dashboard");
+        } else {
+            response.sendRedirect("auth?action=admin-login&error=invalid");
+        }
+    }
+    
+    private void logout(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        response.sendRedirect("berita");
+    }
 }
