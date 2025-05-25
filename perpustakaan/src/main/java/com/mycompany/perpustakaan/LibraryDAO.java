@@ -6,79 +6,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryDAO {
-    private final String url = "jdbc:mysql://localhost:3306/perpustakaan";
-    private final String user = "root"; // ganti jika user/password MySQL kamu beda
-    private final String password = "";
 
-    private Connection connect() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
-    }
+    // Create / Insert
+    public void addLibrary(Library library) {
+        String sql = "INSERT INTO library (id, name, location, phoneNumber, operationalHour) VALUES (?, ?, ?, ?, ?)";
 
-    public void addLibrary(Library lib) {
-        String query = "INSERT INTO library (id, name, location, phoneNumber, operationalHour) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, lib.getId());
-            stmt.setString(2, lib.getName());
-            stmt.setString(3, lib.getLocation());
-            stmt.setString(4, lib.getPhoneNumber());
-            stmt.setString(5, lib.getOperationalHour());
+        try (Connection conn = Koneksi.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, library.getId());
+            stmt.setString(2, library.getName());
+            stmt.setString(3, library.getLocation());
+            stmt.setString(4, library.getPhoneNumber());
+            stmt.setString(5, library.getOperationalHour());
             stmt.executeUpdate();
-            System.out.println("Library added successfully.");
+            System.out.println("Data berhasil ditambahkan.");
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Gagal menambahkan: " + e.getMessage());
         }
     }
 
+    // Read
     public List<Library> getAllLibraries() {
-        List<Library> libraries = new ArrayList<>();
-        String query = "SELECT * FROM library";
-        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+        List<Library> list = new ArrayList<>();
+        String sql = "SELECT * FROM library";
+
+        try (Connection conn = Koneksi.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                libraries.add(new Library(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        rs.getString("location"),
-                        rs.getString("phoneNumber"),
-                        rs.getString("operationalHour")
-                ));
+                Library lib = new Library(
+                    rs.getString("id"),
+                    rs.getString("name"),
+                    rs.getString("location"),
+                    rs.getString("phoneNumber"),
+                    rs.getString("operationalHour")
+                );
+                list.add(lib);
             }
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Gagal membaca data: " + e.getMessage());
         }
-        return libraries;
+
+        return list;
     }
 
-    public void updateLibrary(Library lib) {
-        String query = "UPDATE library SET name=?, location=?, phoneNumber=?, operationalHour=? WHERE id=?";
-        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, lib.getName());
-            stmt.setString(2, lib.getLocation());
-            stmt.setString(3, lib.getPhoneNumber());
-            stmt.setString(4, lib.getOperationalHour());
-            stmt.setString(5, lib.getId());
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Library updated successfully.");
-            } else {
-                System.out.println("Library not found.");
-            }
+    // Update
+    public void updateLibrary(Library library) {
+        String sql = "UPDATE library SET name=?, location=?, phoneNumber=?, operationalHour=? WHERE id=?";
+
+        try (Connection conn = Koneksi.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, library.getName());
+            stmt.setString(2, library.getLocation());
+            stmt.setString(3, library.getPhoneNumber());
+            stmt.setString(4, library.getOperationalHour());
+            stmt.setString(5, library.getId());
+            stmt.executeUpdate();
+            System.out.println("Data berhasil diperbarui.");
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Gagal update: " + e.getMessage());
         }
     }
 
+    // Delete
     public void deleteLibrary(String id) {
-        String query = "DELETE FROM library WHERE id=?";
-        try (Connection conn = connect(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        String sql = "DELETE FROM library WHERE id=?";
+
+        try (Connection conn = Koneksi.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Library deleted successfully.");
-            } else {
-                System.out.println("Library not found.");
-            }
+            stmt.executeUpdate();
+            System.out.println("Data berhasil dihapus.");
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Gagal hapus: " + e.getMessage());
         }
     }
 }
