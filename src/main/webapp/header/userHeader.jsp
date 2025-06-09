@@ -49,14 +49,14 @@
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-custom px-4">
-  <a class="navbar-brand" href="#">📚 E-Library</a>
+  <a class="navbar-brand">📚 E-Library</a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item"><a class="nav-link" href="userDashboard.jsp">🏠 Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="user_dashboard.jsp">🏠 Dashboard</a></li>
       <li class="nav-item"><a class="nav-link" href="">📖 Booking Buku</a></li>
       <li class="nav-item"><a class="nav-link" href="">🕓 Riwayat</a></li>
     </ul>
@@ -64,7 +64,7 @@
     <div class="d-flex align-items-center">
       <span class="navbar-text me-3">Halo, <%= userDataHeader.getName() %> 👋</span>
       <span class="navbar-text me-3">
-      <a href="logout.jsp" class="nav-link">Settings</a></span> 
+      <a href="accountSettings.jsp" class="nav-link">Settings</a></span> 
       <a href="logout.jsp" class="btn-logout">Logout</a>
     </div>
   </div>

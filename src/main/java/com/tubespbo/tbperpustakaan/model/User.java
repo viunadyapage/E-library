@@ -66,5 +66,18 @@ public class User extends Account {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+    public void updateProfile(String name, String phoneNumber, String address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
+    public boolean changePassword(String oldPass, String newPass) {
+        if (this.password.equals(oldPass)) {
+            this.password = newPass;
+            return true;
+        }
+        return false;
+    }
 }
