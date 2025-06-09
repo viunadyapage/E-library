@@ -1,5 +1,6 @@
+<%@ page session="true" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.tubespbo.tbperpustakaan.model.User" %> <%-- Sesuaikan package --%>
+<%@ page import="com.tubespbo.tbperpustakaan.model.User" %> 
 <%
     // Ambil objek User dari sesi
     User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -10,27 +11,43 @@
         return; // Hentikan eksekusi sisa halaman JSP
     }
 %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <title>User Page</title>
     <meta charset="UTF-8">
-    <title>Dashboard Pengguna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
-        body { font-family: sans-serif; margin: 20px; }
-        .header { background-color: #007bff; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { margin: 0; }
-        .logout-btn { background-color: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 14px; }
-        .logout-btn:hover { background-color: #c82333; }
-        .welcome-message { font-size: 18px; }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Selamat Datang, <%= loggedInUser.getName() != null ? loggedInUser.getName() : loggedInUser.getUsername() %>!</h1>
-        <a href="logout" class="logout-btn">Logout</a> <%-- Asumsi Anda akan membuat LogoutServlet --%>
-    </div>
+<div class="page-wrapper">
 
-    <div class="welcome-message">
+    <%@ include file="header/userHeader.jsp" %>
+
+    <div class="container content-wrapper py-4">
+        <div class="welcome-message">
         <p>Anda telah berhasil login sebagai pengguna.</p>
         <p>Email Anda: <%= loggedInUser.getEmail() %></p>
         <p>Username Anda: <%= loggedInUser.getUsername() %></p>
@@ -45,6 +62,10 @@
         <li>Lihat Riwayat Peminjaman (belum dibuat)</li>
         <li>Update Profil (belum dibuat)</li>
     </ul>
+    </div>
 
+    <%@ include file="footer/userFooter.jsp" %>
+
+</div>
 </body>
 </html>

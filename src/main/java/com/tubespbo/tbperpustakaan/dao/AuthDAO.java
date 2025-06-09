@@ -59,10 +59,6 @@ public class AuthDAO {
                      "FROM accounts acc LEFT JOIN users usr ON acc.accountID = usr.accountID " +
                      "WHERE acc.email = ? AND acc.accountType = 'USER'";
         
-        System.out.println("---------------------------------------------------------");
-        System.out.println("Attempting login for email: " + email);
-        System.out.println("Plain password received by DAO: " + plainPassword); // Hati-hati menampilkan plain password di log produksi
-
         try (Connection conn = DBConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
@@ -94,9 +90,8 @@ public class AuthDAO {
     }
     
     private String generateNextAccountID(Connection conn, String prefix) throws SQLException {
-        // Query untuk mendapatkan angka maksimum dari ID dengan prefix tertentu
         String query = "SELECT MAX(CAST(SUBSTRING_INDEX(accountID, '_', -1) AS UNSIGNED)) AS max_id FROM accounts WHERE accountID LIKE ?";
-        long nextIdNum = 1; // Default jika tidak ada ID sebelumnya
+        long nextIdNum = 1;
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, prefix + "_%");
