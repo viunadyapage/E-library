@@ -45,7 +45,15 @@
 <div class="page-wrapper">
 
     <%@ include file="../header/userHeader.jsp" %>
-
+    
+    <c:if test="${not empty message}">
+        <div class="alert alert-success">${message}</div>
+    </c:if>
+    
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
+    
     <div class="container content-wrapper py-4">
         <h2>Pengaturan Akun</h2>
 

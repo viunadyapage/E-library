@@ -33,7 +33,7 @@
     <%@ include file="header/userHeader.jsp" %>
 
     <div class="container content-wrapper py-4">
-        asdf
+        test
     </div>
 
     <%@ include file="footer/userFooter.jsp" %>

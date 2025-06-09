@@ -173,5 +173,32 @@ public class AuthDAO {
         }
     }
     
+    public boolean updateProfile(User user) throws SQLException{
+        String sql = "UPDATE users SET name=?, phoneNumber=?, address=? WHERE accountID=?";
+        Connection conn = DBConnection.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getPhoneNumber());
+            stmt.setString(3, user.getAddress());
+            stmt.setString(4, user.getAccountID());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePassword(User user) throws SQLException {
+        String sql = "UPDATE accounts SET password=? WHERE accountID=?";
+        Connection conn = DBConnection.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getPassword());
+            stmt.setString(2, user.getAccountID());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     
 }
