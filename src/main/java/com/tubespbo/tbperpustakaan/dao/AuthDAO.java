@@ -5,6 +5,7 @@
 package com.tubespbo.tbperpustakaan.dao;
 
 import com.tubespbo.tbperpustakaan.model.Account;
+import com.tubespbo.tbperpustakaan.model.Admin;
 import com.tubespbo.tbperpustakaan.model.User;
 import com.tubespbo.tbperpustakaan.utils.DBConnection;
 import java.sql.Connection;
@@ -200,5 +201,32 @@ public class AuthDAO {
             return false;
         }
     }
-    
+    public Admin loginAdmin(String email, String password) throws SQLException {
+        String sql = "SELECT a.accountID, a.email, a.password, a.isActive, a.registDate, " +
+                     "adm.username, adm.perpusID, adm.roleID " +
+                     "FROM accounts a JOIN admins adm ON a.accountID = adm.accountID " +
+                     "WHERE a.email = ? AND a.password = ? AND a.accountType = 'ADMIN' AND a.isActive = TRUE";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Admin admin = new Admin();
+                admin.setAccountID(rs.getString("accountID"));
+                admin.setEmail(rs.getString("email"));
+                admin.setPassword(rs.getString("password"));
+                admin.setRegistDate(rs.getDate("registDate"));
+                admin.setActive(rs.getBoolean("isActive"));
+                admin.setUsername(rs.getString("username"));
+                admin.setPerpusID(rs.getString("perpusID"));
+                admin.setRoleID(rs.getString("roleID"));
+                return admin;
+            }
+        }
+        return null;
+    }
 }
+

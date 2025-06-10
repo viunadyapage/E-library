@@ -14,7 +14,9 @@ public abstract class Account {
     protected boolean isActive;
     protected Date registDate;
     protected String accountType;
-
+    
+    public Account() {
+    }
     public Account(String email, String password, String accountType) {
         this.accountID = UUID.randomUUID().toString(); 
         this.email = email;
