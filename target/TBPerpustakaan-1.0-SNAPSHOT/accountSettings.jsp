@@ -43,18 +43,26 @@
 </head>
 <body>
 <div class="page-wrapper">
-
     <%@ include file="../header/userHeader.jsp" %>
     
-    <c:if test="${not empty message}">
-        <div class="alert alert-success">${message}</div>
-    </c:if>
-    
-    <c:if test="${not empty error}">
-        <div class="alert alert-danger">${error}</div>
-    </c:if>
     
     <div class="container content-wrapper py-4">
+        
+        <%
+            String message = (String) session.getAttribute("message");
+            String messageType = (String) session.getAttribute("messageType"); // success / danger / info / warning
+            if (message != null && messageType != null) {
+        %>
+            <div class="alert alert-<%= messageType %> alert-dismissible fade show mt-3" role="alert">
+                <%= message %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <%
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            }
+        %>
+        
         <h2>Pengaturan Akun</h2>
 
         <!-- Form Ubah Data Diri -->

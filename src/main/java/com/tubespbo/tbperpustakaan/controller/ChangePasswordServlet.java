@@ -43,17 +43,19 @@ public class ChangePasswordServlet extends HttpServlet {
                 saved = auth.updatePassword(user);
                 if(saved){
                     session.setAttribute("loggedInUser", user);
-                    request.setAttribute("message", "Password berhasil diubah!");
+                    session.setAttribute("message", "Password berhasil diubah");
+                    session.setAttribute("messageType", "success");
                 }else{
-                    request.setAttribute("error", "Password lama salah.");
+                    session.setAttribute("message", "Password lama salah.");
+                    session.setAttribute("messageType", "danger");
                 }   
             } catch (SQLException ex) {
                 Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            request.setAttribute("error", "Password lama salah.");
+            session.setAttribute("message", "Password lama salah.");
+            session.setAttribute("messageType", "danger");
         }
-
-        request.getRequestDispatcher("accountSettings.jsp").forward(request, response);
+        response.sendRedirect("accountSettings.jsp");
     }
 }
