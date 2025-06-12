@@ -23,7 +23,6 @@
     <div class="login-container">
         <h2>Login Pengguna</h2>
 
-        <%-- Menampilkan pesan error dari Servlet --%>
         <%
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null && !errorMessage.isEmpty()) {
@@ -48,7 +47,6 @@
         </form>
         <div class="register-link">
             <p>Belum punya akun? <a href="register">Daftar di sini</a></p>
-            <%-- Asumsi Anda punya Servlet yang di-mapping ke /register untuk menampilkan halaman registrasi --%>
         </div>
     </div>
 </body>

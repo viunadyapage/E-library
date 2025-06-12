@@ -30,14 +30,12 @@ public class AddAdminServlet extends HttpServlet {
             return;
         }
 
-        // Ambil data dari form
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String perpusID = request.getParameter("perpusID");
         String roleID = request.getParameter("roleID");
 
-        // Buat objek admin baru
         Admin newAdmin = new Admin();
         newAdmin.setAccountID(UUID.randomUUID().toString());
         newAdmin.setUsername(username);

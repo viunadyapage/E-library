@@ -2,13 +2,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.tubespbo.tbperpustakaan.model.User" %> 
 <%
-    // Ambil objek User dari sesi
     User currentUser = (User) session.getAttribute("loggedInUser");
 
-    // Cek apakah pengguna sudah login, jika tidak, redirect ke halaman login
     if (currentUser == null) {
         response.sendRedirect("login_user.jsp");
-        return; // Hentikan eksekusi sisa halaman JSP
+        return;
     }
 %>
 
@@ -20,7 +18,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -65,7 +62,6 @@
         
         <h2>Pengaturan Akun</h2>
 
-        <!-- Form Ubah Data Diri -->
         <form action="UpdateProfileServlet" method="post" class="mb-4">
             <h4>Ubah Data Diri</h4>
             <div class="mb-3">
@@ -83,7 +79,6 @@
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
         </form>
 
-        <!-- Form Ubah Password -->
         <form action="ChangePasswordServlet" method="post">
             <h4>Ubah Password</h4>
             <div class="mb-3">

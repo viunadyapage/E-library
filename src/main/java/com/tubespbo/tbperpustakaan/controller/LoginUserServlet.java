@@ -3,11 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package com.tubespbo.tbperpustakaan.controller; // Sesuaikan package
+package com.tubespbo.tbperpustakaan.controller; 
 
 import com.tubespbo.tbperpustakaan.dao.AuthDAO;
-// import com.tubespbo.tbperpustakaan.model.Account; // Atau User jika DAO mengembalikan User
-import com.tubespbo.tbperpustakaan.model.User; // Menggunakan User dari revisi DAO
+import com.tubespbo.tbperpustakaan.model.User;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

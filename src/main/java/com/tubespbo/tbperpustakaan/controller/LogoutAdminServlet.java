@@ -12,7 +12,7 @@ public class LogoutAdminServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); // Hapus semua atribut session termasuk loggedInAdmin
+            session.invalidate();
         }
 
         response.sendRedirect("loginAdmin.jsp");

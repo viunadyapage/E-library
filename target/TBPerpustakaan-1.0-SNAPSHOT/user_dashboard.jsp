@@ -2,13 +2,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.tubespbo.tbperpustakaan.model.User" %> 
 <%
-    // Ambil objek User dari sesi
     User loggedInUser = (User) session.getAttribute("loggedInUser");
 
-    // Cek apakah pengguna sudah login, jika tidak, redirect ke halaman login
     if (loggedInUser == null) {
         response.sendRedirect("login_user.jsp");
-        return; // Hentikan eksekusi sisa halaman JSP
+        return;
     }
 %>
 
@@ -51,12 +49,10 @@
         <p>Anda telah berhasil login sebagai pengguna.</p>
         <p>Email Anda: <%= loggedInUser.getEmail() %></p>
         <p>Username Anda: <%= loggedInUser.getUsername() %></p>
-        <%-- Tampilkan informasi lain dari objek loggedInUser jika perlu --%>
     </div>
 
     <p><a href="index.html">Kembali ke Beranda</a></p>
 
-    <%-- Di sini Anda bisa menambahkan link ke fitur-fitur pengguna lainnya --%>
     <ul>
         <li>Lihat Daftar Buku (belum dibuat)</li>
         <li>Lihat Riwayat Peminjaman (belum dibuat)</li>

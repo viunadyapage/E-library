@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Registrasi Pengguna Baru - Perpustakaan</title>
     <style>
-        /* Tambahkan CSS Anda di sini atau link ke file CSS eksternal */
         body { font-family: sans-serif; margin: 20px; display: flex; justify-content: center; }
         .container { width: 450px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; }
         h2 { text-align: center; }

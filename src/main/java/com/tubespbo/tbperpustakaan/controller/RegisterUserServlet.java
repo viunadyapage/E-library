@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/register") // URL mapping untuk servlet ini
+@WebServlet("/register")
 public class RegisterUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private AuthDAO authDAO;

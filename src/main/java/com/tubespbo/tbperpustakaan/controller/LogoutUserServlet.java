@@ -19,16 +19,16 @@ public class LogoutUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false); // Ambil sesi yang ada, jangan buat baru jika tidak ada
+        HttpSession session = request.getSession(false); 
         if (session != null) {
-            session.invalidate(); // Hapus semua atribut sesi dan batalkan sesi
+            session.invalidate(); 
         }
-        response.sendRedirect("login_user.jsp"); // Redirect ke halaman login
+        response.sendRedirect("login_user.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response); // Tangani POST request sama seperti GET untuk logout
+        doGet(request, response);
     }
 }

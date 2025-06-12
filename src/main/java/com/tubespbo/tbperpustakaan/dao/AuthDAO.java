@@ -50,9 +50,8 @@ public class AuthDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle error, mungkin log atau throw custom exception
         }
-        return account; // Mengembalikan objek Account jika berhasil, null jika gagal
+        return account; 
     }
 
     public User validateUserLogin(String email, String plainPassword) {

@@ -1,6 +1,6 @@
-package com.tubespbo.tbperpustakaan.controller; // Sesuaikan dengan package Anda
+package com.tubespbo.tbperpustakaan.controller; 
 
-import com.tubespbo.tbperpustakaan.utils.DBConnection; // Sesuaikan dengan package DbConnection Anda
+import com.tubespbo.tbperpustakaan.utils.DBConnection;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,14 +8,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date; // Untuk mengambil waktu dari DB
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/testDbConnection") // Ini adalah URL mapping untuk servlet
+@WebServlet("/testDbConnection")
 public class TestDbServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class TestDbServlet extends HttpServlet {
                     }
                 } catch (SQLException eQuery) {
                     out.println("<p style='color:red;'>Koneksi berhasil, tapi GAGAL menjalankan query sederhana: " + eQuery.getMessage() + "</p>");
-                    eQuery.printStackTrace(out); // Cetak stack trace ke output HTML untuk debug
+                    eQuery.printStackTrace(out);
                 }
 
             } else {
@@ -64,7 +64,7 @@ public class TestDbServlet extends HttpServlet {
             out.println("<p style='color:red;'>Koneksi ke database GAGAL! Error: " + e.getMessage() + "</p>");
             out.println("<h3>Detail Error (SQLException):</h3>");
             out.println("<pre>");
-            e.printStackTrace(out); // Cetak stack trace ke output HTML untuk debug
+            e.printStackTrace(out);
             out.println("</pre>");
             out.println("<p><strong>Pastikan:</strong></p>");
             out.println("<ul>");
@@ -73,20 +73,19 @@ public class TestDbServlet extends HttpServlet {
             out.println("<li>Kredensial (DB_USER, DB_PASSWORD) di DbConnection.java sudah benar.</li>");
             out.println("<li>MySQL Connector/J JAR sudah ada di classpath/dependencies.</li>");
             out.println("</ul>");
-        } catch (Exception e) { // Menangkap exception lain seperti dari Class.forName() di DbConnection
+        } catch (Exception e) {
             out.println("<p style='color:red;'>Terjadi error umum: " + e.getMessage() + "</p>");
             out.println("<h3>Detail Error (Exception Umum):</h3>");
             out.println("<pre>");
-            e.printStackTrace(out); // Cetak stack trace ke output HTML untuk debug
+            e.printStackTrace(out);
             out.println("</pre>");
         } finally {
             out.println("</body>");
             out.println("</html>");
             if (conn != null) {
                 try {
-                    conn.close(); // Selalu tutup koneksi setelah selesai digunakan
+                    conn.close(); 
                 } catch (SQLException eClose) {
-                    // Bisa di-log, tapi untuk tes ini kita abaikan error saat menutup
                     System.err.println("Error saat menutup koneksi: " + eClose.getMessage());
                 }
             }

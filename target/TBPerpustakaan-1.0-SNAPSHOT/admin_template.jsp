@@ -1,3 +1,12 @@
+<%@ page import="com.tubespbo.tbperpustakaan.model.Admin" %>
+<%
+    Admin admin = (Admin) session.getAttribute("loggedInAdmin");
+    if (admin == null) {
+        response.sendRedirect("loginAdmin.jsp");
+        return;
+    }
+%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,13 +38,13 @@
 <body>
 <div class="page-wrapper">
 
-    <%@ include file="header/userHeader.jsp" %>
+    <%@ include file="header/adminHeader.jsp" %>
 
     <div class="container content-wrapper py-4">
-        test
+        
     </div>
 
-    <%@ include file="footer/userFooter.jsp" %>
+    <%@ include file="footer/adminFooter.jsp" %>
 
 </div>
 </body>
