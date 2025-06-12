@@ -17,7 +17,11 @@ public class User extends Account {
     private String name;
     private String phoneNumber;
     private String address;
-
+    
+    public User() {
+        super();
+    }
+    
     public User(String email, String password, String username, String name, String phoneNumber, String address) {
         super(email, password, "USER");
         this.username = username;

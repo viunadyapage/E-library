@@ -17,6 +17,7 @@ public class Admin extends Account {
         this.username = username;
         this.perpusID = perpusID;
         this.roleID = roleID;
+        
     }
 
     // Getters and setters
@@ -42,5 +43,9 @@ public class Admin extends Account {
 
     public void setRoleID(String roleID) {
         this.roleID = roleID;
+    }
+    
+    public boolean isSuperAdmin() {
+        return "SUPER_ADMIN".equalsIgnoreCase(this.roleID);
     }
 }

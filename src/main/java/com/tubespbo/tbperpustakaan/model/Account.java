@@ -27,7 +27,7 @@ public abstract class Account {
     }
 
     public Account(String accountID, String email, String hashedPassword, boolean isActive, Date registDate, String accountType) {
-        this.accountID = accountID;
+        this.accountID = UUID.randomUUID().toString();
         this.email = email;
         this.password = hashedPassword;
         this.isActive = isActive;

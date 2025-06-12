@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AuthDAO {
 
@@ -228,5 +230,109 @@ public class AuthDAO {
         }
         return null;
     }
+    
+    public List<User> getAllUsers() throws SQLException {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT a.accountID, a.email, a.isActive, a.registDate, u.username, u.name, u.phoneNumber, u.address " +
+                     "FROM accounts a JOIN users u ON a.accountID = u.accountID";
+
+        Connection conn = DBConnection.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setAccountID(rs.getString("accountID"));
+                user.setEmail(rs.getString("email"));
+                user.setActive(rs.getBoolean("isActive"));
+                user.setRegistDate(rs.getDate("registDate"));
+                user.setUsername(rs.getString("username"));
+                user.setName(rs.getString("name"));
+                user.setPhoneNumber(rs.getString("phoneNumber"));
+                user.setAddress(rs.getString("address"));
+
+                userList.add(user);
+            }
+        }
+        return userList;
+    }
+    
+    public List<Admin> getAllAdmins() {
+        List<Admin> admins = new ArrayList<>();
+        String sql = "SELECT a.accountID, a.email, a.isActive, a.accountType, u.username, u.perpusID, u.roleID " +
+                     "FROM accounts a JOIN admins u ON a.accountID = u.accountID WHERE a.accountType = 'ADMIN'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Admin admin = new Admin();
+                admin.setAccountID(rs.getString("accountID"));
+                admin.setEmail(rs.getString("email"));
+                admin.setActive(rs.getBoolean("isActive"));
+                admin.setAccountType(rs.getString("accountType"));
+                admin.setUsername(rs.getString("username"));
+                admin.setPerpusID(rs.getString("perpusID"));
+                admin.setRoleID(rs.getString("roleID"));
+                admins.add(admin);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return admins;
+    }
+    
+    public boolean setAdminStatus(String accountID, boolean isActive) {
+        String sql = "UPDATE accounts SET isActive = ? WHERE accountID = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, isActive);
+            stmt.setString(2, accountID);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean registerAdmin(Admin admin) throws SQLException {
+        String sqlAccount = "INSERT INTO accounts (accountID, email, password, isActive, registDate, accountType) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlAdmin = "INSERT INTO admins (accountID, username, perpusID, roleID) VALUES (?, ?, ?, ?)";
+
+        Connection conn = DBConnection.getConnection();
+        try {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt1 = conn.prepareStatement(sqlAccount);
+                 PreparedStatement stmt2 = conn.prepareStatement(sqlAdmin)) {
+
+                stmt1.setString(1, admin.getAccountID());
+                stmt1.setString(2, admin.getEmail());
+                stmt1.setString(3, admin.getPassword());
+                stmt1.setBoolean(4, admin.isActive());
+                stmt1.setDate(5, new java.sql.Date(admin.getRegistDate().getTime()));
+                stmt1.setString(6, "admin");
+
+                stmt2.setString(1, admin.getAccountID());
+                stmt2.setString(2, admin.getUsername());
+                stmt2.setString(3, admin.getPerpusID());
+                stmt2.setString(4, admin.getRoleID());
+
+                stmt1.executeUpdate();
+                stmt2.executeUpdate();
+
+                conn.commit();
+                return true;
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw ex;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
 

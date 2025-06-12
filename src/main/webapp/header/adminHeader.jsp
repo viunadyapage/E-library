@@ -6,6 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <%
     Admin adminDataHeader = (Admin) session.getAttribute("loggedInAdmin");
+    String roleID = adminDataHeader.getRoleID();
 %>
 <style>
   .navbar-custom {
@@ -56,15 +57,17 @@
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item"><a class="nav-link" href="adminDashboard.jsp">Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link" href="manageUsers.jsp">Kelola Pengguna</a></li>
-      <li class="nav-item"><a class="nav-link" href="report.jsp">Laporan</a></li>
+      <li class="nav-item"><a class="nav-link" href="viewUsers">Kelola Pengguna</a></li>
+      <% if ("SUPER_ADMIN".equalsIgnoreCase(roleID)) { %>
+          <li class="nav-item"><a class="nav-link" href="manageAdmins.jsp">Kelola Admin</a></li>
+    <% } %>
     </ul>
 
     <div class="d-flex align-items-center">
       <span class="navbar-text me-3">Halo, <%= adminDataHeader.getUsername()%> 👋</span>
       <span class="navbar-text me-3">
       <a href="accountSettings.jsp" class="nav-link">Settings</a></span> 
-      <a href="logout.jsp" class="btn-logout">Logout</a>
+      <a href="LogoutAdminServlet" class="btn-logout">Logout</a>
     </div>
   </div>
 </nav>

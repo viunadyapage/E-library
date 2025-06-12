@@ -26,7 +26,7 @@ public class AdminLoginServlet extends HttpServlet {
                 session.setAttribute("loggedInAdmin", loggedInAdmin);
                 session.setAttribute("username", loggedInAdmin.getUsername());
                 session.setAttribute("accountType", "ADMIN");
-
+                session.setAttribute("adminRoleID", loggedInAdmin.getRoleID());
                 response.sendRedirect("adminDashboard.jsp");
             } else {
                 HttpSession session = request.getSession();

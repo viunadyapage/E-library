@@ -1,5 +1,8 @@
+com\tubespbo\tbperpustakaan\controller\ToggleAdminStatusServlet.class
 com\tubespbo\tbperpustakaan\controller\ChangePasswordServlet.class
 com\tubespbo\tbperpustakaan\controller\TestDbServlet.class
+com\tubespbo\tbperpustakaan\controller\ViewUsersServlet.class
+com\tubespbo\tbperpustakaan\controller\AddAdminServlet.class
 com\tubespbo\tbperpustakaan\model\User.class
 com\tubespbo\tbperpustakaan\controller\RegisterUserServlet.class
 com\tubespbo\tbperpustakaan\controller\AdminLoginServlet.class
@@ -11,3 +14,4 @@ com\tubespbo\tbperpustakaan\utils\DBConnection.class
 com\tubespbo\tbperpustakaan\controller\LogoutUserServlet.class
 com\tubespbo\tbperpustakaan\controller\UpdateProfileServlet.class
 com\tubespbo\tbperpustakaan\dao\AuthDAO.class
+com\tubespbo\tbperpustakaan\controller\LogoutAdminServlet.class
