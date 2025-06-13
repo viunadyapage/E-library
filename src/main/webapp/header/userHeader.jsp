@@ -65,7 +65,7 @@
       <span class="navbar-text me-3">Halo, <%= userDataHeader.getName() %> 👋</span>
       <span class="navbar-text me-3">
       <a href="accountSettings.jsp" class="nav-link">Settings</a></span> 
-      <a href="logout.jsp" class="btn-logout">Logout</a>
+      <a href="logout" class="btn-logout">Logout</a>
     </div>
   </div>
 </nav>
