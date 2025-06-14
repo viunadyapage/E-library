@@ -87,19 +87,26 @@ public class BukuDAO {  //ini semua bisa dilakukan oleh admin ya
         }  
         return list;  
     }  
+    
+    
 
     // Mendapatkan buku berdasarkan ID  
     public Buku getBukuById(String idBuku) {  
-        Buku buku = null;  
-        String sql = "SELECT * FROM buku WHERE idBuku=?";  
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {  
-            stmt.setString(1, idBuku);  
-            try (ResultSet rs = stmt.executeQuery()) {  
-                if (rs.next()) {  
-                    buku = new Buku();  
-                    buku.setIdBuku(rs.getString("idBuku"));  
-                    buku.setJudul(rs.getString("judul"));  
-                    buku.setPenulis(rs.getString("penulis"));  
-                    buku.setPenerbit(rs.getString("penerbit"));  
-                    buku.setTahunTerbit(rs.getInt("tahunTerbit"));  
-                    buku.setIdStatus(rs.getString("
+//        Buku buku = null;  
+//        String sql = "SELECT * FROM buku WHERE idBuku=?";  
+//        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {  
+//            stmt.setString(1, idBuku);  
+//            try (ResultSet rs = stmt.executeQuery()) {  
+//                if (rs.next()) {  
+//                    buku = new Buku();  
+//                    buku.setIdBuku(rs.getString("idBuku"));  
+//                    buku.setJudul(rs.getString("judul"));  
+//                    buku.setPenulis(rs.getString("penulis"));  
+//                    buku.setPenerbit(rs.getString("penerbit"));  
+//                    buku.setTahunTerbit(rs.getInt("tahunTerbit"));  
+//                    buku.setIdStatus(rs.getString(""
+//                            + ""
+//                            + 
+        return null;
+    }
+}
