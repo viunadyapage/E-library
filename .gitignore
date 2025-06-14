@@ -1,9 +1,8 @@
 /build/
 /dist/
-/nbproject/private/
 /target/
 *.class
 *.log
 *.iml
 *.bak
-/nbproject/
+
